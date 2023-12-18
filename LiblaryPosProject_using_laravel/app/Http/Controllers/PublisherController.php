@@ -1,0 +1,93 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Publisher;
+use Illuminate\Http\Request;
+
+class PublisherController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        return view('admin.publisher.index');
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $this->validate($request,[
+            'name' => ['required'],
+            'email' => ['required'],
+            'phone_number' => ['required'],
+            'addres' => ['required'], 
+    
+    ]);
+
+        Publisher::create($request->all());
+
+        return redirect ('publishers');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function api()
+    {
+       $publishers = Publisher::all();
+       $datatables = datatables()->of($publishers)->addColumn('date', function($publishers) {return dateformat($publishers->created_at); })->addIndexColumn();
+
+       return $datatables->make(true);
+    }
+
+    public function show(Publisher $publisher)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Publisher $publisher)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Publisher $publisher)
+    {
+        $this->validate($request,[
+            'name' => ['required'],
+            'email' => ['required'],
+            'phone_number' => ['required'],
+            'addres' => ['required'], 
+    
+    ]);
+
+        $publisher->update($request->all());
+
+        return redirect ('publishers');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Publisher $publisher)
+    {
+        $publisher->delete();
+    }
+}
